@@ -1,13 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Todo } from "@/types";
-
-let todos: Todo[] = [
-  { id: 1, title: "TanStack Query 설치하기", completed: true, createdAt: "2024-01-01T00:00:00Z" },
-  { id: 2, title: "QueryClient 설정하기", completed: true, createdAt: "2024-01-02T00:00:00Z" },
-  { id: 3, title: "useQuery 학습하기", completed: false, createdAt: "2024-01-03T00:00:00Z" },
-  { id: 4, title: "useMutation 학습하기", completed: false, createdAt: "2024-01-04T00:00:00Z" },
-  { id: 5, title: "캐싱 전략 이해하기", completed: false, createdAt: "2024-01-05T00:00:00Z" },
-];
+import { todosStore } from "@/lib/data/store";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -19,7 +11,7 @@ export async function GET(
   await delay(300);
 
   const { id } = await params;
-  const todo = todos.find((t) => t.id === parseInt(id));
+  const todo = todosStore.getById(parseInt(id));
 
   if (!todo) {
     return NextResponse.json({ error: "Todo not found" }, { status: 404 });
@@ -37,18 +29,13 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await request.json();
-  const todoIndex = todos.findIndex((t) => t.id === parseInt(id));
+  const updated = todosStore.update(parseInt(id), body);
 
-  if (todoIndex === -1) {
+  if (!updated) {
     return NextResponse.json({ error: "Todo not found" }, { status: 404 });
   }
 
-  todos[todoIndex] = {
-    ...todos[todoIndex],
-    ...body,
-  };
-
-  return NextResponse.json(todos[todoIndex]);
+  return NextResponse.json(updated);
 }
 
 // DELETE: 할일 삭제
@@ -59,14 +46,11 @@ export async function DELETE(
   await delay(500);
 
   const { id } = await params;
-  const todoIndex = todos.findIndex((t) => t.id === parseInt(id));
+  const deleted = todosStore.delete(parseInt(id));
 
-  if (todoIndex === -1) {
+  if (!deleted) {
     return NextResponse.json({ error: "Todo not found" }, { status: 404 });
   }
 
-  const deletedTodo = todos[todoIndex];
-  todos = todos.filter((t) => t.id !== parseInt(id));
-
-  return NextResponse.json(deletedTodo);
+  return NextResponse.json(deleted);
 }
