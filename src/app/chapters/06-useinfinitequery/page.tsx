@@ -3,12 +3,56 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import ChapterLayout from "@/components/ChapterLayout";
 import CodeBlock from "@/components/CodeBlock";
+import PracticeGuide from "@/components/PracticeGuide";
 import { fetchInfinitePosts } from "@/lib/api";
 import { useEffect, useRef, useCallback } from "react";
 
 export default function UseInfiniteQueryPage() {
   return (
     <ChapterLayout chapterNumber={6} title="useInfiniteQuery">
+      {/* 실습 가이드 */}
+      <PracticeGuide
+        title="무한 스크롤 & 더 보기 버튼 실습"
+        description="useInfiniteQuery를 사용하여 페이지네이션된 데이터를 점진적으로 로드하는 방법을 실습합니다."
+        steps={[
+          {
+            title: "더 보기 버튼 실습",
+            description: "'예제 1: 더 보기 버튼' 섹션에서 '더 보기' 버튼을 클릭하여 다음 페이지 데이터를 로드합니다.",
+            action: "'더 보기' 버튼 3번 클릭",
+            check: "총 로드된 항목 수가 5 → 10 → 15 → 20으로 증가, 페이지 수도 증가",
+          },
+          {
+            title: "Devtools에서 pages 구조 확인",
+            description: "Devtools를 열고 ['infinite-posts', 'load-more'] 쿼리를 클릭합니다. Data Explorer에서 pages 배열 구조를 확인합니다.",
+            action: "Devtools에서 쿼리 클릭 후 Data 탭 확인",
+            check: "data.pages 배열에 각 페이지 응답이 순서대로 저장됨",
+          },
+          {
+            title: "hasNextPage 상태 확인",
+            description: "계속 '더 보기'를 클릭하여 모든 데이터를 로드합니다. 마지막에 버튼 텍스트가 변경되는지 확인합니다.",
+            action: "마지막 페이지까지 계속 클릭",
+            check: "버튼 텍스트가 '마지막입니다'로 변경되고 비활성화됨",
+          },
+          {
+            title: "무한 스크롤 실습",
+            description: "'예제 2: 무한 스크롤' 섹션에서 스크롤 영역 안쪽을 아래로 스크롤합니다.",
+            action: "회색 테두리 영역 안에서 마우스 휠로 스크롤",
+            check: "스크롤이 맨 아래에 닿으면 자동으로 다음 페이지 로드",
+          },
+          {
+            title: "Intersection Observer 동작 확인",
+            description: "무한 스크롤 섹션 하단에 '스크롤하여 더 불러오기' 텍스트가 화면에 보일 때 자동 로드되는지 확인합니다.",
+            check: "로딩 중... 표시 후 새 데이터가 추가됨",
+          },
+        ]}
+        tips={[
+          "getNextPageParam에서 null/undefined를 반환하면 hasNextPage가 false가 됩니다",
+          "data.pages.flatMap(page => page.data)로 모든 데이터를 하나의 배열로 만들 수 있습니다",
+          "isFetchingNextPage로 다음 페이지 로딩 중인지만 별도로 확인할 수 있습니다",
+          "Intersection Observer는 지정한 요소가 화면에 보일 때 콜백을 실행합니다",
+        ]}
+      />
+
       {/* 섹션 1: 개요 */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">

@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import ChapterLayout from "@/components/ChapterLayout";
 import CodeBlock from "@/components/CodeBlock";
+import PracticeGuide from "@/components/PracticeGuide";
 import { fetchPosts, fetchPost, fetchUsers } from "@/lib/api";
 import { useState } from "react";
 import { Post } from "@/types";
@@ -10,6 +11,50 @@ import { Post } from "@/types";
 export default function UseQueryPage() {
   return (
     <ChapterLayout chapterNumber={5} title="useQuery">
+      {/* 실습 가이드 */}
+      <PracticeGuide
+        title="useQuery 핵심 옵션 실습"
+        description="useQuery의 다양한 옵션들을 직접 사용해보고 동작을 확인합니다."
+        steps={[
+          {
+            title: "select 옵션 실습",
+            description: "페이지를 스크롤하여 'select로 데이터 변환' 실습 섹션을 찾습니다. 버튼을 클릭하여 데이터가 어떻게 변환되는지 확인합니다.",
+            action: "'전체 데이터', '제목만', '처음 3개만' 버튼 각각 클릭",
+            check: "같은 API 응답이 select 옵션에 따라 다르게 변환됨",
+          },
+          {
+            title: "placeholderData 옵션 실습",
+            description: "'placeholderData로 부드러운 전환' 섹션에서 Post 1~5 버튼을 빠르게 클릭합니다.",
+            action: "Post 버튼들을 연속해서 클릭",
+            check: "로딩 스피너 없이 이전 데이터가 흐리게 표시되다가 새 데이터로 교체됨",
+          },
+          {
+            title: "상태 플래그 확인",
+            description: "'쿼리 상태 확인' 섹션에서 각 상태 플래그(isLoading, isFetching 등)의 값을 확인합니다.",
+            action: "'Refetch' 버튼을 클릭하고 상태 변화 관찰",
+            check: "isFetching이 true로 바뀌었다가 다시 false로 변경됨",
+          },
+          {
+            title: "수동 Refetch 실습",
+            description: "'수동 Refetch' 섹션에서 refetch 버튼을 클릭하고 마지막 업데이트 시간이 변경되는지 확인합니다.",
+            action: "'수동 Refetch' 버튼 클릭",
+            check: "마지막 업데이트 시간이 현재 시간으로 갱신됨",
+          },
+          {
+            title: "Window Focus Refetch 테스트",
+            description: "다른 탭이나 창으로 전환했다가 다시 이 페이지로 돌아옵니다. staleTime이 지났다면 자동으로 refetch됩니다.",
+            action: "다른 탭으로 이동 후 5초 뒤 돌아오기",
+            check: "Devtools에서 백그라운드 refetch 발생 확인",
+          },
+        ]}
+        tips={[
+          "select는 캐시된 원본 데이터를 변환만 할 뿐, 캐시 자체는 변경하지 않습니다",
+          "placeholderData는 캐시에 저장되지 않습니다 (initialData와의 차이점)",
+          "isLoading과 isFetching의 차이: isLoading은 첫 로딩만, isFetching은 모든 fetch 포함",
+          "Devtools에서 쿼리를 클릭하면 Data Explorer로 캐시 데이터를 확인할 수 있습니다",
+        ]}
+      />
+
       {/* 섹션 1: useQuery 기본 */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">

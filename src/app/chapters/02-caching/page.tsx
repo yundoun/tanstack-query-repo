@@ -3,6 +3,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ChapterLayout from "@/components/ChapterLayout";
 import CodeBlock from "@/components/CodeBlock";
+import PracticeGuide from "@/components/PracticeGuide";
 import { fetchPosts } from "@/lib/api";
 import { useState } from "react";
 
@@ -11,6 +12,47 @@ export default function CachingPage() {
 
   return (
     <ChapterLayout chapterNumber={2} title="데이터 캐싱">
+      {/* 실습 가이드 */}
+      <PracticeGuide
+        title="캐싱 동작 방식 이해하기"
+        description="TanStack Query의 캐싱이 어떻게 동작하는지 직접 확인해봅니다."
+        steps={[
+          {
+            title: "컴포넌트 A 확인하기",
+            description: "페이지 로드 시 '컴포넌트 A'가 서버에서 데이터를 가져옵니다. '로딩 중...' 상태를 확인하세요.",
+            check: "로딩 후 '로드 완료' 배지와 게시글 목록이 표시됨",
+          },
+          {
+            title: "Devtools 열기",
+            description: "화면 하단의 TanStack Query 로고(꽃 모양)를 클릭하여 Devtools를 엽니다.",
+            action: "하단 로고 클릭",
+            check: "Devtools 패널이 열리고 ['posts'] 쿼리가 표시됨",
+          },
+          {
+            title: "컴포넌트 B 표시하기",
+            description: "'컴포넌트 B 표시하기' 버튼을 클릭합니다. 같은 queryKey를 사용하므로 캐시된 데이터가 즉시 표시됩니다.",
+            action: "'컴포넌트 B 표시하기' 버튼 클릭",
+            check: "로딩 없이 '캐시에서 즉시 로드!' 메시지와 함께 데이터 표시",
+          },
+          {
+            title: "캐시 시간 비교하기",
+            description: "컴포넌트 A와 B의 '마지막 업데이트' 시간이 동일한지 확인합니다. 같은 캐시를 공유하고 있습니다.",
+            check: "두 컴포넌트의 업데이트 시간이 동일함",
+          },
+          {
+            title: "캐시 상태 확인하기",
+            description: "'현재 캐시 상태 확인' 버튼을 눌러 QueryClient에 저장된 캐시 정보를 확인합니다.",
+            action: "'현재 캐시 상태 확인' 버튼 클릭",
+            check: "JSON 형태로 쿼리 키, 상태, 업데이트 시간 표시",
+          },
+        ]}
+        tips={[
+          "Devtools에서 쿼리를 클릭하면 캐시된 데이터를 직접 확인할 수 있습니다",
+          "같은 queryKey를 사용하는 컴포넌트들은 모두 같은 캐시를 공유합니다",
+          "컴포넌트 B를 숨겼다가 다시 표시해도 캐시가 유지됩니다",
+        ]}
+      />
+
       {/* 섹션 1: 캐싱이란? */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">

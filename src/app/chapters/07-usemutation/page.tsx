@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ChapterLayout from "@/components/ChapterLayout";
 import CodeBlock from "@/components/CodeBlock";
+import PracticeGuide from "@/components/PracticeGuide";
 import {
   fetchTodos,
   createTodo,
@@ -15,6 +16,54 @@ import { Todo } from "@/types";
 export default function UseMutationPage() {
   return (
     <ChapterLayout chapterNumber={7} title="useMutation">
+      {/* 실습 가이드 */}
+      <PracticeGuide
+        title="Todo CRUD 실습"
+        description="useMutation을 사용하여 데이터를 생성, 수정, 삭제하고 캐시를 갱신하는 과정을 실습합니다."
+        steps={[
+          {
+            title: "Devtools 열고 쿼리 확인",
+            description: "먼저 Devtools를 열고 ['todos-demo'] 쿼리가 있는지 확인합니다. 페이지 로드시 자동으로 할일 목록을 가져옵니다.",
+            action: "화면 하단 TanStack Query 로고 클릭",
+            check: "['todos-demo'] 쿼리가 success 상태로 표시됨",
+          },
+          {
+            title: "새 할일 추가하기 (Create)",
+            description: "'예제: Todo CRUD' 섹션에서 입력창에 새 할일을 입력하고 '추가' 버튼을 클릭합니다.",
+            action: "'TanStack Query 마스터하기' 입력 후 추가 버튼 클릭",
+            check: "목록에 새 할일이 추가되고, Devtools에서 캐시가 갱신됨",
+          },
+          {
+            title: "mutation 상태 배지 확인",
+            description: "추가 버튼을 클릭했을 때 '생성 중...' 배지가 잠시 표시되는지 확인합니다. 이것이 isPending 상태입니다.",
+            check: "'생성 중...' 배지가 표시되었다가 사라짐",
+          },
+          {
+            title: "할일 완료 처리하기 (Update)",
+            description: "할일 항목의 체크박스를 클릭하여 완료 상태를 토글합니다.",
+            action: "체크박스 클릭",
+            check: "체크 표시가 되고 텍스트에 취소선이 생김, '수정 중...' 배지 표시",
+          },
+          {
+            title: "할일 삭제하기 (Delete)",
+            description: "'삭제' 버튼을 클릭하여 할일을 삭제합니다.",
+            action: "삭제 버튼 클릭",
+            check: "항목이 목록에서 제거됨, '삭제 중...' 배지 표시",
+          },
+          {
+            title: "Query Invalidation 확인",
+            description: "Devtools에서 mutation 후 ['todos-demo'] 쿼리가 다시 fetch되는지 확인합니다. invalidateQueries가 호출되어 캐시가 갱신됩니다.",
+            check: "mutation 후 쿼리가 fetching 상태가 되었다가 다시 success로 변경",
+          },
+        ]}
+        tips={[
+          "mutation.mutate()는 콜백 방식, mutateAsync()는 Promise 방식입니다",
+          "onSuccess에서 invalidateQueries를 호출하면 관련 쿼리가 자동으로 refetch됩니다",
+          "isPending 상태를 활용하여 버튼 비활성화, 로딩 표시 등 UX를 개선할 수 있습니다",
+          "여러 mutation이 동시에 실행될 수 있으므로 각각의 isPending 상태를 별도로 관리합니다",
+        ]}
+      />
+
       {/* 섹션 1: 개요 */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
